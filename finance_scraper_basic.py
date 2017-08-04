@@ -22,13 +22,8 @@ def google_sector_report():
 
         table = soup.find_all('tr')
         hold = get_gainers_losers(table)
-        index['biggest_gainer'] = {}
-        index['biggest_gainer']['equity'] = hold[0][0]
-        index['biggest_gainer']['change'] = hold[0][1]
-        
-        index['biggest_loser'] = {}
-        index['biggest_loser']['equity'] = hold[1][0]
-        index['biggest_loser']['change'] = hold[1][1]
+        index['biggest_gainer'] = {'equity': hold[0][0], 'change': hold[0][1]}
+        index['biggest_loser'] = {'equity': hold[0][0], 'change': hold[0][1]}
 
     json_string = json.dumps(jsond)
     return(json_string)
@@ -51,9 +46,14 @@ def get_gainers_losers(table):
             if clean(chng) == None:
                 continue
             temp = clean(chng)
-        if temp > val:
-            val = temp
-            name = row.find('a').get_text()
+        if temp < 0:
+            if temp < val:
+                val = temp
+                name = row.find('a').get_text()
+        else:
+            if temp > val:
+                val = temp
+                name = row.find('a').get_text()
     return(hold)
     
     
@@ -62,7 +62,7 @@ def clean(row):
     if not '%' in text:
         return (None)
     for i in text:
-        if not i.isdigit(): 
+        if not i.isdigit() and not i == '-': 
             text = text.strip(i)
         text = text.strip('%')
     return(float(text))
