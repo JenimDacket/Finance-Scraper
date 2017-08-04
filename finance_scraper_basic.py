@@ -15,15 +15,16 @@ def google_sector_report():
         sector = x.find('a').get_text()
         jsond['result'][sector] = {}
         index = jsond['result'][sector]
-        index['change'] = x.find('span').get_text()
+        index['change'] = clean(x.find('span'))
                 
         response = re.get('https://www.google.com' + x.find('a').get('href'))
         soup = BS(response.content, 'lxml').find('table', class_='topmovers')
 
         table = soup.find_all('tr')
         hold = get_gainers_losers(table)
+        print(hold)
         index['biggest_gainer'] = {'equity': hold[0][0], 'change': hold[0][1]}
-        index['biggest_loser'] = {'equity': hold[0][0], 'change': hold[0][1]}
+        index['biggest_loser'] = {'equity': hold[1][0], 'change': hold[1][1]}
 
     json_string = json.dumps(jsond)
     return(json_string)
@@ -67,4 +68,5 @@ def clean(row):
         text = text.strip('%')
     return(float(text))
 
+print('running...')
 print(google_sector_report())
