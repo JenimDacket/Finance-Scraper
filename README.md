@@ -1,3 +1,5 @@
+Programming month 4; python month 1
+
 This is a basic web scraper that accesses the main google finance page to:
 - scrape the best and worst equities of each sector, with percentage change
 - scrape the percentage change for each sector
